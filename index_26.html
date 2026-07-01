@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nástroje na prohlídku</title>
+
+<!--
+  ┌─────────────────────────────────────────────────────────────┐
+  │  ODKAZY – kdyby ses potřeboval kdykoli přehodit jinam,       │
+  │  stačí přepsat tyhle čtyři adresy:                           │
+  └─────────────────────────────────────────────────────────────┘
+  Velká tlačítka míří na živou aplikaci (GitHub Pages).
+  Malý odkaz "Zdrojový kód" míří na repozitář.
+
+  Pokud u některého repozitáře ještě není zapnuté GitHub Pages,
+  aplikace se neotevře – v repozitáři jdi do
+  Settings → Pages a jako zdroj zvol větev "main".
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:      #E8E6DC;
+    --paper-2:    #F6F3EA;
+    --ink:        #21241C;
+    --ink-soft:   #5b6050;
+    --line:       #d7d1c1;
+
+    /* dotazník – mosaz / teplá */
+    --brass:      #A9803E;
+    --brass-deep: #856127;
+    --brass-tint: #f2e9d6;
+
+    /* inventura – břidlice / chladná */
+    --slate:      #3f5468;
+    --slate-deep: #2c3f52;
+    --slate-tint: #e2e6ea;
+
+    --radius: 18px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ -webkit-text-size-adjust:100%; }
+
+  body{
+    font-family:"Inter", system-ui, sans-serif;
+    background:
+      radial-gradient(120% 80% at 50% -10%, #efece2 0%, var(--paper) 55%) fixed;
+    color:var(--ink);
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 20px 40px;
+  }
+
+  .kit{
+    width:100%;
+    max-width:760px;
+  }
+
+  /* ── záhlaví ────────────────────────────── */
+  .head{
+    margin-bottom:26px;
+    padding-left:4px;
+  }
+  .eyebrow{
+    font-size:.72rem;
+    font-weight:600;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:26px;
+    height:1px;
+    background:var(--ink-soft);
+    opacity:.6;
+  }
+  h1{
+    font-family:"Bricolage Grotesque", sans-serif;
+    font-weight:700;
+    font-size:clamp(2rem, 7vw, 3.1rem);
+    line-height:1.02;
+    letter-spacing:-.02em;
+  }
+
+  /* ── mřížka karet ───────────────────────── */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+  @media (min-width:640px){
+    .grid{ grid-template-columns:1fr 1fr; gap:18px; }
+  }
+
+  /* ── karta / štítek ─────────────────────── */
+  .tool{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    min-height:200px;
+    padding:24px 22px 20px;
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    text-decoration:none;
+    color:inherit;
+    overflow:hidden;
+    box-shadow:0 1px 0 #fff inset, 0 10px 22px -18px rgba(33,36,28,.55);
+    transition:transform .18s cubic-bezier(.2,.7,.3,1),
+               box-shadow .18s ease,
+               border-color .18s ease;
+    animation:rise .55s cubic-bezier(.2,.7,.3,1) both;
+  }
+  .tool:nth-child(2){ animation-delay:.08s; }
+
+  /* barevná hrana štítku vlevo */
+  .tool::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:6px;
+    background:var(--accent);
+  }
+  /* "dírka" jako u klíčenky / visačky */
+  .punch{
+    position:absolute;
+    top:16px; right:18px;
+    width:16px; height:16px;
+    border-radius:50%;
+    background:var(--paper);
+    box-shadow:inset 0 1px 2px rgba(33,36,28,.35);
+  }
+
+  .tool.dotaznik{ --accent:var(--brass);  --accent-deep:var(--brass-deep);  --tint:var(--brass-tint); }
+  .tool.inventura{ --accent:var(--slate); --accent-deep:var(--slate-deep); --tint:var(--slate-tint); }
+
+  .icon{
+    width:44px; height:44px;
+    border-radius:12px;
+    background:var(--tint);
+    color:var(--accent-deep);
+    display:grid; place-items:center;
+    margin-bottom:auto;
+  }
+  .icon svg{ width:24px; height:24px; }
+
+  .tool h2{
+    font-family:"Bricolage Grotesque", sans-serif;
+    font-weight:700;
+    font-size:1.32rem;
+    line-height:1.12;
+    letter-spacing:-.01em;
+    margin-top:20px;
+  }
+  .tool p{
+    font-size:.9rem;
+    color:var(--ink-soft);
+    margin-top:6px;
+    line-height:1.4;
+  }
+
+  .go{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:18px;
+    font-weight:600;
+    font-size:.92rem;
+    color:var(--accent-deep);
+  }
+  .go .arrow{
+    transition:transform .2s ease;
+  }
+
+  /* interakce */
+  .tool:hover{
+    transform:translateY(-3px);
+    border-color:var(--accent);
+    box-shadow:0 1px 0 #fff inset, 0 20px 30px -20px rgba(33,36,28,.6);
+  }
+  .tool:hover .go .arrow{ transform:translateX(4px); }
+  .tool:active{
+    transform:translateY(1px);
+    box-shadow:0 1px 0 #fff inset, 0 6px 14px -12px rgba(33,36,28,.6);
+  }
+  .tool:focus-visible{
+    outline:3px solid var(--accent);
+    outline-offset:3px;
+  }
+
+  /* malý odkaz na zdrojový kód */
+  .src{
+    position:absolute;
+    bottom:18px; right:18px;
+    font-size:.74rem;
+    color:var(--ink-soft);
+    text-decoration:none;
+    border-bottom:1px solid transparent;
+    padding-bottom:1px;
+    transition:color .15s ease, border-color .15s ease;
+    z-index:2;
+  }
+  .src:hover{ color:var(--ink); border-color:var(--ink-soft); }
+  .src:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:3px; }
+
+  /* ── patička ────────────────────────────── */
+  footer{
+    margin-top:26px;
+    padding-left:4px;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    line-height:1.5;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .tool{ animation:none; transition:none; }
+    .go .arrow{ transition:none; }
+  }
+
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(14px); }
+    to{   opacity:1; transform:translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+  <main class="kit">
+    <div class="head">
+      <h1>Vyber si nástroj</h1>
+    </div>
+
+    <div class="grid">
+
+      <!-- DOTAZNÍK -->
+      <a class="tool dotaznik" href="https://vojtechnemm.github.io/dotaznik/">
+        <span class="punch"></span>
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 3h6a1 1 0 0 1 1 1v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1V4a1 1 0 0 1 1-1z"/>
+            <path d="M9 3.5A1.5 1.5 0 0 0 10.5 5h3A1.5 1.5 0 0 0 15 3.5"/>
+            <path d="m9 13 2 2 4-4"/>
+          </svg>
+        </span>
+        <h2>Dotazník na prohlídku</h2>
+        <span class="go">Otevřít <span class="arrow">→</span></span>
+        <a class="src" href="https://github.com/vojtechnemm/dotaznik">Zdrojový kód ↗</a>
+      </a>
+
+      <!-- INVENTURA -->
+      <a class="tool inventura" href="https://vojtechnemm.github.io/inventura/">
+        <span class="punch"></span>
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3.5 8 12 3l8.5 5v8L12 21l-8.5-5V8z"/>
+            <path d="M3.5 8 12 13l8.5-5"/>
+            <path d="M12 13v8"/>
+          </svg>
+        </span>
+        <h2>Podklady k inventuře</h2>
+        <span class="go">Otevřít <span class="arrow">→</span></span>
+        <a class="src" href="https://github.com/vojtechnemm/inventura">Zdrojový kód ↗</a>
+      </a>
+
+    </div>
+
+    <footer>
+      Tlačítka otevřou webovou aplikaci. Odkaz „Zdrojový kód“ vede na repozitář na GitHubu.
+    </footer>
+  </main>
+
+</body>
+</html>
